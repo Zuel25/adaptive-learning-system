@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Interaktif</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <h2>✏️ Latihan Interaktif</h2>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="practice-container">
+            <div class="progress-bar">
+                <div class="progress" id="progressBar" style="width: 0%"></div>
+            </div>
+            <p class="progress-text"><span id="currentQuestion">1</span> dari <span id="totalQuestions">5</span></p>
+
+            <div class="question-box" id="questionBox">
+                <h3 class="question-title">Pertanyaan akan dimuat...</h3>
+            </div>
+
+            <div id="feedbackBox" class="feedback-box" style="display:none"></div>
+
+            <div class="button-group">
+                <button id="submitBtn" class="btn-primary" onclick="submitAnswer()">Jawab</button>
+                <button id="nextBtn" class="btn-primary" onclick="nextQuestion()" style="display:none">Soal Berikutnya →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let answers = {};
+        let materialId = new URLSearchParams(window.location.search).get('material');
+
+        async function loadPracticeQuestions() {
+            try {
+                const studentId = localStorage.getItem('studentId');
+                const response = await fetch(`http://localhost:5000/api/practice/questions?material=${materialId}&student=${studentId}`);
+                questions = await response.json();
+                document.getElementById('totalQuestions').textContent = questions.length;
+                displayQuestion(0);
+            } catch (error) {
+                console.error('Error loading practice questions:', error);
+                document.getElementById('questionBox').innerHTML = '<p class="error">Gagal memuat soal latihan</p>';
+            }
+        }
+
+        function displayQuestion(index) {
+            if (index < 0 || index >= questions.length) return;
+
+            currentQuestionIndex = index;
+            const question = questions[index];
+            const questionBox = document.getElementById('questionBox');
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.style.display = 'none';
+
+            let html = `
+                <h3 class="question-title">Soal ${index + 1}</h3>
+                <p class="question-text">${question.question}</p>
+                <div class="options">
+            `;
+
+            question.options.forEach((option, i) => {
+                html += `
+                    <label class="option-label">
+                        <input type="radio" name="answer" value="${option}">
+                        <span class="option-text">${option}</span>
+                    </label>
+                `;
+            });
+
+            html += `</div>`;
+            questionBox.innerHTML = html;
+
+            // Update progress
+            document.getElementById('currentQuestion').textContent = index + 1;
+            document.getElementById('progressBar').style.width = ((index + 1) / questions.length * 100) + '%';
+
+            // Update buttons
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function submitAnswer() {
+            const selected = document.querySelector('input[name="answer"]:checked');
+            if (!selected) {
+                alert('Pilih jawaban terlebih dahulu');
+                return;
+            }
+
+            const answer = selected.value;
+            const question = questions[currentQuestionIndex];
+            const isCorrect = answer === question.correct_answer;
+
+            answers[currentQuestionIndex] = answer;
+
+            // Show feedback
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.innerHTML = `
+                <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                    <p>${isCorrect ? '✅ Jawaban Benar!' : '❌ Jawaban Salah'}</p>
+                    <p class="explanation">${question.explanation}</p>
+                </div>
+            `;
+            feedbackBox.style.display = 'block';
+
+            // Update button
+            document.getElementById('submitBtn').style.display = 'none';
+            if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('nextBtn').textContent = 'Selesai';
+                document.getElementById('nextBtn').onclick = finishPractice;
+            }
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            displayQuestion(currentQuestionIndex + 1);
+        }
+
+        async function finishPractice() {
+            try {
+                const studentId = localStorage.getItem('studentId');
+                const correctAnswers = Object.entries(answers).filter(([index, answer]) => {
+                    return answer === questions[index].correct_answer;
+                }).length;
+
+                const response = await fetch('http://localhost:5000/api/practice/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        student_id: studentId,
+                        material_id: materialId,
+                        answers: answers,
+                        correct_count: correctAnswers,
+                        total_count: questions.length
+                    })
+                });
+
+                const result = await response.json();
+                alert(`Selesai!\nJawaban Benar: ${correctAnswers} dari ${questions.length}\nSkor: ${result.score}`);
+                window.location.href = 'learning.html';
+            } catch (error) {
+                console.error('Error submitting practice:', error);
+                alert('Gagal mengirim jawaban');
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '../index.html';
+        }
+
+        loadPracticeQuestions();
+    </script>
+</body>
+</html>

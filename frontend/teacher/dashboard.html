@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Guru</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <h2>📊 Dashboard Guru</h2>
+            <div class="user-info">
+                <span id="teacherName"></span>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="dashboard-grid">
+                <div class="stats-card">
+                    <h3>👥 Total Siswa</h3>
+                    <p class="stat-number" id="totalStudents">0</p>
+                </div>
+                <div class="stats-card">
+                    <h3>✅ Selesai Pre-test</h3>
+                    <p class="stat-number" id="pretestDone">0</p>
+                </div>
+                <div class="stats-card">
+                    <h3>📚 Rata-rata Skor</h3>
+                    <p class="stat-number" id="avgScore">0%</p>
+                </div>
+                <div class="stats-card">
+                    <h3>🎯 Progres Pembelajaran</h3>
+                    <p class="stat-number" id="avgProgress">0%</p>
+                </div>
+            </div>
+
+            <h3>📋 Daftar Siswa dan Perkembangan</h3>
+            <div class="filter-section">
+                <input type="text" id="searchInput" placeholder="Cari nama siswa..." onkeyup="filterStudents()">
+                <select id="levelFilter" onchange="filterStudents()">
+                    <option value="">Semua Level</option>
+                    <option value="dasar">Dasar</option>
+                    <option value="menengah">Menengah</option>
+                    <option value="mahir">Mahir</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Siswa</th>
+                            <th>Email</th>
+                            <th>Level</th>
+                            <th>Skor Pre-test</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Data siswa akan di-load dari API -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        let allStudents = [];
+
+        async function initDashboard() {
+            try {
+                const teacherId = localStorage.getItem('teacherId');
+                const response = await fetch(`http://localhost:5000/api/teacher/${teacherId}/dashboard`);
+                const data = await response.json();
+
+                document.getElementById('teacherName').textContent = `Halo, ${data.teacher_name}`;
+                document.getElementById('totalStudents').textContent = data.total_students;
+                document.getElementById('pretestDone').textContent = data.pretest_done;
+                document.getElementById('avgScore').textContent = data.avg_score + '%';
+                document.getElementById('avgProgress').textContent = data.avg_progress + '%';
+
+                loadStudents();
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+            }
+        }
+
+        async function loadStudents() {
+            try {
+                const response = await fetch('http://localhost:5000/api/students');
+                allStudents = await response.json();
+                displayStudents(allStudents);
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+
+        function displayStudents(students) {
+            let html = '';
+            students.forEach((student, index) => {
+                const statusBadge = getStatusBadge(student.status);
+                const levelBadge = getLevelBadge(student.level);
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.email}</td>
+                        <td>${levelBadge}</td>
+                        <td>${student.score}%</td>
+                        <td>
+                            <div class="progress-mini">
+                                <div class="progress-mini-bar" style="width: ${student.progress}%"></div>
+                            </div>
+                            ${student.progress}%
+                        </td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn-small" onclick="viewDetail('${student.id}')">Detail</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('studentTableBody').innerHTML = html;
+        }
+
+        function filterStudents() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const level = document.getElementById('levelFilter').value;
+
+            const filtered = allStudents.filter(student => {
+                const matchName = student.name.toLowerCase().includes(search);
+                const matchLevel = level === '' || student.level === level;
+                return matchName && matchLevel;
+            });
+
+            displayStudents(filtered);
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                'belum_pretest': '<span class="badge badge-warning">⏳ Belum Pre-test</span>',
+                'learning': '<span class="badge badge-info">📚 Belajar</span>',
+                'completed': '<span class="badge badge-success">✅ Selesai</span>'
+            };
+            return badges[status] || status;
+        }
+
+        function getLevelBadge(level) {
+            const badges = {
+                'dasar': '<span class="badge badge-primary">🟢 Dasar</span>',
+                'menengah': '<span class="badge badge-warning">🟡 Menengah</span>',
+                'mahir': '<span class="badge badge-danger">🔴 Mahir</span>'
+            };
+            return badges[level] || level;
+        }
+
+        function viewDetail(studentId) {
+            alert('Detail siswa ID: ' + studentId + ' (Fitur detail akan ditampilkan di modal)');
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '../index.html';
+        }
+
+        initDashboard();
+    </script>
+</body>
+</html>

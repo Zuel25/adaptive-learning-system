@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-test Numerasi</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <h2>📝 Pre-test Numerasi</h2>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="pretest-container">
+            <div class="progress-bar">
+                <div class="progress" id="progressBar" style="width: 0%"></div>
+            </div>
+            <p class="progress-text"><span id="currentQuestion">1</span> dari <span id="totalQuestions">10</span></p>
+
+            <div class="question-box" id="questionBox">
+                <!-- Questions akan di-load dari API -->
+            </div>
+
+            <div class="button-group">
+                <button id="prevBtn" class="btn-secondary" onclick="previousQuestion()">← Sebelumnya</button>
+                <button id="nextBtn" class="btn-primary" onclick="nextQuestion()">Selanjutnya →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let answers = {};
+
+        async function loadPretest() {
+            try {
+                const response = await fetch('http://localhost:5000/api/pretest/questions');
+                questions = await response.json();
+                document.getElementById('totalQuestions').textContent = questions.length;
+                displayQuestion(0);
+            } catch (error) {
+                console.error('Error loading pretest:', error);
+                document.getElementById('questionBox').innerHTML = '<p class="error">Gagal memuat pertanyaan</p>';
+            }
+        }
+
+        function displayQuestion(index) {
+            if (index < 0 || index >= questions.length) return;
+
+            currentQuestionIndex = index;
+            const question = questions[index];
+            const questionBox = document.getElementById('questionBox');
+
+            let html = `
+                <h3 class="question-title">Pertanyaan ${index + 1}</h3>
+                <p class="question-text">${question.question}</p>
+                <div class="options">
+            `;
+
+            question.options.forEach((option, i) => {
+                const checked = answers[index] === option ? 'checked' : '';
+                html += `
+                    <label class="option-label">
+                        <input type="radio" name="answer" value="${option}" ${checked} onchange="saveAnswer(${index}, '${option}')">
+                        <span class="option-text">${option}</span>
+                    </label>
+                `;
+            });
+
+            html += `</div>`;
+            questionBox.innerHTML = html;
+
+            // Update progress
+            document.getElementById('currentQuestion').textContent = index + 1;
+            document.getElementById('progressBar').style.width = ((index + 1) / questions.length * 100) + '%';
+
+            // Update buttons
+            document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'block';
+            document.getElementById('nextBtn').textContent = index === questions.length - 1 ? 'Selesai' : 'Selanjutnya →';
+        }
+
+        function saveAnswer(index, answer) {
+            answers[index] = answer;
+        }
+
+        function previousQuestion() {
+            displayQuestion(currentQuestionIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex === questions.length - 1) {
+                submitPretest();
+            } else {
+                displayQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        async function submitPretest() {
+            try {
+                const studentId = localStorage.getItem('studentId');
+                const response = await fetch('http://localhost:5000/api/pretest/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        student_id: studentId,
+                        answers: answers
+                    })
+                });
+
+                const result = await response.json();
+                alert(`Selesai! Level Anda: ${result.level}\nSkor: ${result.score}`);
+                window.location.href = 'learning.html';
+            } catch (error) {
+                console.error('Error submitting pretest:', error);
+                alert('Gagal mengirim jawaban');
+            }
+        }
+
+        // Load pretest on page load
+        loadPretest();
+    </script>
+</body>
+</html>

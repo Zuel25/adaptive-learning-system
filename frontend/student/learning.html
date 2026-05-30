@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pembelajaran</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <h2>📚 Materi Pembelajaran</h2>
+            <div class="user-info">
+                <span id="userGreeting"></span>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <div class="learning-container">
+            <div class="sidebar">
+                <h3>📊 Profil Anda</h3>
+                <div class="profile-card">
+                    <p><strong>Level:</strong> <span id="levelBadge" class="badge"></span></p>
+                    <p><strong>Skor Pre-test:</strong> <span id="scoreBadge"></span>%</p>
+                    <p><strong>Progress:</strong> <span id="progressBadge">0</span>%</p>
+                </div>
+
+                <h3>📖 Materi</h3>
+                <div id="materialList" class="material-list">
+                    <!-- Materials akan di-load dari API -->
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div id="materialContent" class="material-content">
+                    <p class="placeholder">Pilih materi untuk memulai pembelajaran</p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-primary" id="practiceBtn" onclick="goToPractice()" style="display:none">Mulai Latihan →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        let currentMaterialId = null;
+        let studentLevel = 'dasar';
+        let studentScore = 0;
+
+        async function initLearning() {
+            try {
+                const studentId = localStorage.getItem('studentId');
+                const response = await fetch(`http://localhost:5000/api/student/${studentId}/profile`);
+                const profile = await response.json();
+
+                studentLevel = profile.level;
+                studentScore = profile.score;
+
+                document.getElementById('userGreeting').textContent = `Halo, ${profile.name}`;
+                document.getElementById('levelBadge').textContent = getLevelText(studentLevel);
+                document.getElementById('scoreBadge').textContent = studentScore;
+                document.getElementById('progressBadge').textContent = profile.progress;
+
+                loadMaterials();
+            } catch (error) {
+                console.error('Error initializing learning:', error);
+            }
+        }
+
+        async function loadMaterials() {
+            try {
+                const response = await fetch(`http://localhost:5000/api/materials?level=${studentLevel}`);
+                const materials = await response.json();
+
+                let html = '';
+                materials.forEach(material => {
+                    html += `
+                        <div class="material-item" onclick="loadMaterial(${material.id}, '${material.title}')">
+                            <div class="material-header">
+                                <h4>${material.title}</h4>
+                                <span class="material-badge">${material.level}</span>
+                            </div>
+                            <p>${material.description}</p>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('materialList').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading materials:', error);
+            }
+        }
+
+        function loadMaterial(materialId, title) {
+            currentMaterialId = materialId;
+            const content = getMaterialContent(materialId, studentLevel);
+            document.getElementById('materialContent').innerHTML = `
+                <h2>${title}</h2>
+                ${content}
+            `;
+            document.getElementById('practiceBtn').style.display = 'block';
+        }
+
+        function getMaterialContent(materialId, level) {
+            const materials = {
+                1: {
+                    dasar: `
+                        <div class="material-section">
+                            <h3>Penjumlahan Dasar</h3>
+                            <p>Penjumlahan adalah operasi menggabungkan dua bilangan atau lebih.</p>
+                            <div class="example-box">
+                                <h4>Contoh:</h4>
+                                <p>2 + 3 = 5</p>
+                                <p>Ini berarti jika kita punya 2 apel dan menambah 3 apel, maka total menjadi 5 apel.</p>
+                            </div>
+                            <div class="exercise-box">
+                                <h4>Mari Latihan:</h4>
+                                <p>Coba hitung: 1 + 4 = ?</p>
+                            </div>
+                        </div>
+                    `,
+                    menengah: `
+                        <div class="material-section">
+                            <h3>Penjumlahan Bersusun</h3>
+                            <p>Penjumlahan bersusun digunakan untuk bilangan yang lebih besar.</p>
+                            <div class="example-box">
+                                <h4>Contoh:</h4>
+                                <pre>
+  23
++ 15
+----
+  38
+                                </pre>
+                            </div>
+                        </div>
+                    `,
+                    mahir: `
+                        <div class="material-section">
+                            <h3>Penjumlahan Desimal dan Pecahan</h3>
+                            <p>Operasi pada bilangan desimal dan pecahan memerlukan pemahaman lebih mendalam.</p>
+                            <div class="example-box">
+                                <h4>Contoh Desimal:</h4>
+                                <p>2.5 + 3.7 = 6.2</p>
+                                <h4>Contoh Pecahan:</h4>
+                                <p>1/2 + 1/3 = 5/6</p>
+                            </div>
+                        </div>
+                    `
+                },
+                2: {
+                    dasar: `
+                        <div class="material-section">
+                            <h3>Pengurangan Dasar</h3>
+                            <p>Pengurangan adalah operasi mengurangi bilangan.</p>
+                            <div class="example-box">
+                                <h4>Contoh:</h4>
+                                <p>5 - 2 = 3</p>
+                            </div>
+                        </div>
+                    `,
+                    menengah: `
+                        <div class="material-section">
+                            <h3>Pengurangan Bersusun</h3>
+                            <p>Pengurangan dengan bilangan yang lebih besar.</p>
+                        </div>
+                    `,
+                    mahir: `
+                        <div class="material-section">
+                            <h3>Pengurangan Kompleks</h3>
+                            <p>Pengurangan dengan desimal dan pecahan.</p>
+                        </div>
+                    `
+                }
+            };
+
+            return materials[materialId]?.[level] || '<p>Materi tidak tersedia</p>';
+        }
+
+        function goToPractice() {
+            if (!currentMaterialId) {
+                alert('Pilih materi terlebih dahulu');
+                return;
+            }
+            window.location.href = `practice.html?material=${currentMaterialId}`;
+        }
+
+        function getLevelText(level) {
+            const levels = { 'dasar': '🟢 Dasar', 'menengah': '🟡 Menengah', 'mahir': '🔴 Mahir' };
+            return levels[level] || level;
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '../index.html';
+        }
+
+        initLearning();
+    </script>
+</body>
+</html>
