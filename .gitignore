@@ -1,0 +1,257 @@
+# Sistem Pembelajaran Adaptif Numerasi - Panduan Instalasi & Penggunaan
+
+## 📋 Daftar Isi
+1. [Instalasi](#instalasi)
+2. [Menjalankan Aplikasi](#menjalankan-aplikasi)
+3. [Struktur Project](#struktur-project)
+4. [Akun Demo](#akun-demo)
+5. [Fitur Utama](#fitur-utama)
+6. [API Documentation](#api-documentation)
+
+## 🚀 Instalasi
+
+### Requirements
+- Python 3.8+
+- Node.js atau Web Browser modern
+- SQLite3
+
+### Langkah-Langkah Instalasi
+
+#### 1. Clone Repository
+```bash
+git clone https://github.com/Zuel25/adaptive-learning-system.git
+cd adaptive-learning-system
+```
+
+#### 2. Setup Backend
+```bash
+# Masuk folder backend
+cd backend
+
+# Buat virtual environment (opsional tapi disarankan)
+python -m venv venv
+
+# Aktivasi virtual environment
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+#### 3. Jalankan Backend
+```bash
+# Dari folder backend
+python app.py
+```
+
+Server akan berjalan di `http://localhost:5000`
+
+#### 4. Setup Frontend
+```bash
+cd ../frontend
+
+# Gunakan Live Server atau HTTP Server
+# Opsi 1: Dengan Python (Python 3)
+python -m http.server 8000
+
+# Opsi 2: Dengan Node.js (jika terinstall)
+npx http-server -p 8000
+```
+
+Akses aplikasi di `http://localhost:8000`
+
+## 🎮 Menjalankan Aplikasi
+
+### Terminal 1 - Backend
+```bash
+cd backend
+python app.py
+```
+
+### Terminal 2 - Frontend
+```bash
+cd frontend
+python -m http.server 8000
+```
+
+### Buka Browser
+Akses `http://localhost:8000` di browser
+
+## 📁 Struktur Project
+
+```
+adaptive-learning-system/
+├── frontend/
+│   ├── index.html              # Halaman login
+│   ├── student/
+│   │   ├── pretest.html        # Pre-test numerasi
+│   │   ├── learning.html       # Materi pembelajaran
+│   │   └── practice.html       # Latihan soal
+│   ├── teacher/
+│   │   └── dashboard.html      # Dashboard guru
+│   ├── css/
+│   │   └── style.css           # Styling utama
+│   └── js/
+│       ├── app.js              # Main logic
+│       └── api.js              # API integration
+├── backend/
+│   ├── app.py                  # Flask server utama
+│   ├── database.py             # Database setup & queries
+│   ├── ai_model.py             # AI/ML logic
+│   ├── requirements.txt        # Python dependencies
+│   └── adaptive_learning.db    # SQLite database (auto-created)
+└── README.md                   # Dokumentasi
+```
+
+## 🔐 Akun Demo
+
+### Siswa
+- **Email:** student@example.com
+- **Password:** student123
+
+### Guru
+- **Email:** teacher@example.com
+- **Password:** teacher123
+
+### Siswa Demo Lainnya
+- **Ahmad Rifaldi** (ahmad@example.com / password123)
+- **Siti Nurhaliza** (siti@example.com / password123)
+
+## ✨ Fitur Utama
+
+### 1. Login & Registrasi
+- Login untuk Siswa dan Guru
+- Registrasi pengguna baru
+- JWT Authentication
+
+### 2. Pre-test Numerasi
+- 10 pertanyaan multiple choice
+- Pengukuran kemampuan awal
+- Penentuan level otomatis (Dasar, Menengah, Mahir)
+
+### 3. Pembelajaran Adaptif
+- Materi disesuaikan dengan level siswa
+- Konten terstruktur dan mudah dipahami
+- Penjelasan detail untuk level dasar
+- Penjelasan concise untuk level mahir
+
+### 4. Latihan Interaktif
+- Soal-soal yang disesuaikan level
+- Feedback otomatis untuk setiap jawaban
+- Pendeteksian kesalahan umum
+- Saran perbaikan
+
+### 5. Tracking & Progress
+- Tracking progress real-time
+- Skor untuk setiap latihan
+- Visualisasi progress dalam bentuk bar
+
+### 6. Dashboard Guru
+- Melihat semua siswa
+- Tracking perkembangan setiap siswa
+- Filter berdasarkan nama atau level
+- Statistik kelas
+
+## 📊 API Documentation
+
+### Authentication
+
+#### POST `/api/login`
+Login user
+```json
+{
+  "email": "student@example.com",
+  "password": "student123",
+  "role": "student"
+}
+```
+
+#### POST `/api/register`
+Registrasi user baru
+```json
+{
+  "name": "Nama Siswa",
+  "email": "student@example.com",
+  "password": "password123",
+  "role": "student"
+}
+```
+
+### Pre-test
+
+#### GET `/api/pretest/questions`
+Dapatkan semua soal pre-test
+
+#### POST `/api/pretest/submit`
+Submit jawaban pre-test dan dapatkan level
+
+### Materials
+
+#### GET `/api/materials?level=dasar`
+Dapatkan materi berdasarkan level
+
+### Practice
+
+#### GET `/api/practice/questions?material=1&student=1`
+Dapatkan soal latihan
+
+#### POST `/api/practice/submit`
+Submit jawaban latihan
+
+### Student Profile
+
+#### GET `/api/student/{id}/profile`
+Dapatkan profil siswa
+
+### Teacher Dashboard
+
+#### GET `/api/teacher/{id}/dashboard`
+Dapatkan data dashboard guru
+
+#### GET `/api/students`
+Dapatkan semua data siswa
+
+## 🛠️ Troubleshooting
+
+### Error: "Connection refused" pada port 5000
+- Pastikan backend sudah berjalan
+- Cek apakah port 5000 sudah digunakan aplikasi lain
+
+### Error: "CORS error"
+- Pastikan frontend berjalan di port yang berbeda (bukan 5000)
+- Cek file `app.py` untuk CORS configuration
+
+### Database error
+- Database akan otomatis dibuat saat pertama kali menjalankan backend
+- Jika ada masalah, hapus file `adaptive_learning.db` dan restart backend
+
+### Lupa password
+- Gunakan akun demo untuk testing
+- Edit database atau register user baru
+
+## 🎓 Mengembangkan Lebih Lanjut
+
+### Menambah Soal Baru
+Edit file `backend/database.py` di bagian insert data atau gunakan database GUI tools
+
+### Mengubah Materi
+Edit file `frontend/student/learning.html` atau tambahkan ke database
+
+### Mengganti Algoritma AI
+Modifikasi file `backend/ai_model.py`
+
+## 📝 Lisensi
+MIT License - Bebas digunakan untuk keperluan pendidikan dan komersial
+
+## 👨‍💻 Developer
+Zuel25 (Tajul Azid)
+
+## 📧 Kontak
+Jika ada pertanyaan atau saran, silakan buat issue di GitHub
+
+---
+
+**Selamat menggunakan Sistem Pembelajaran Adaptif Numerasi! 🎉**
