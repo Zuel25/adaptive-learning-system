@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pembelajaran Adaptif - Numerasi</title>
+    <style>
+        /* ========================================
+           GLOBAL STYLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ========================================
+           LOGIN PAGE
+           ======================================== */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .login-box h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .login-box .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* ========================================
+           FORM STYLES
+           ======================================== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* ========================================
+           BUTTON STYLES
+           ======================================== */
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-demo {
+            width: 100%;
+            padding: 10px;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-demo:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 12px 24px;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-small:hover {
+            background: #5568d3;
+        }
+
+        /* ========================================
+           INFO BOX
+           ======================================== */
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+        }
+
+        /* ========================================
+           NAVBAR
+           ======================================== */
+        .navbar {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info span {
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* ========================================
+           PROGRESS BAR
+           ======================================== */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* ========================================
+           PRETEST & PRACTICE
+           ======================================== */
+        .pretest-container,
+        .practice-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-title {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .question-text {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-label:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .option-text {
+            flex: 1;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* ========================================
+           FEEDBACK BOX
+           ======================================== */
+        .feedback-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .feedback p {
+            margin: 5px 0;
+        }
+
+        .feedback p:first-child {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           BUTTON GROUP
+           ======================================== */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .button-group button {
+            min-width: 150px;
+        }
+
+        /* ========================================
+           LEARNING PAGE
+           ======================================== */
+        .learning-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .profile-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .profile-card p {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .profile-card strong {
+            color: #333;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .badge-primary {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-warning {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .badge-danger {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-info {
+            background: #e0f2f1;
+            color: #00796b;
+        }
+
+        .material-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .material-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .material-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateX(5px);
+        }
+
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .material-header h4 {
+            color: #333;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .material-badge {
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .material-item p {
+            color: #666;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .main-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .material-content {
+            min-height: 400px;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 16px;
+        }
+
+        .material-section {
+            margin-bottom: 30px;
+        }
+
+        .material-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .material-section p {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .example-box,
+        .exercise-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .example-box h4,
+        .exercise-box h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .example-box pre {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* ========================================
+           DASHBOARD
+           ======================================== */
+        .dashboard-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-card h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-section input,
+        .filter-section select {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .filter-section input:focus,
+        .filter-section select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .student-table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .student-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .student-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .student-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .progress-mini {
+            width: 100px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-mini-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* ========================================
+           UTILITY CLASSES
+           ======================================== */
+        .error {
+            color: #f44336;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .success {
+            color: #4caf50;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .navbar h2 {
+                font-size: 20px;
+            }
+
+            .user-info {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .learning-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group button {
+                width: 100%;
+            }
+
+            .student-table {
+                font-size: 12px;
+            }
+
+            .student-table th,
+            .student-table td {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .login-box {
+                padding: 20px 15px;
+            }
+
+            .login-box h1 {
+                font-size: 24px;
+            }
+
+            .pretest-container,
+            .practice-container {
+                padding: 20px;
+            }
+
+            .question-box {
+                padding: 15px;
+            }
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .dashboard-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <h1>🎓 Sistem Pembelajaran Adaptif</h1>
+            <p class="subtitle">Pembelajaran Numerasi Pintar dengan AI</p>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Masukkan email Anda" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Login Sebagai</label>
+                    <select id="role" required>
+                        <option value="">-- Pilih Tipe Login --</option>
+                        <option value="student">Siswa</option>
+                        <option value="teacher">Guru</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+
+            <div class="demo-login">
+                <p>📋 Demo Login:</p>
+                <button type="button" class="btn-demo" onclick="demoLogin('student')">Login Siswa Demo</button>
+                <button type="button" class="btn-demo" onclick="demoLogin('teacher')">Login Guru Demo</button>
+            </div>
+
+            <div class="info-box">
+                <p><strong>Akun Demo:</strong></p>
+                <p>Siswa: student@example.com / student123</p>
+                <p>Guru: teacher@example.com / teacher123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRETEST PAGE -->
+    <div id="pretestPage" class="hidden">
+        <div class="container">
+            <header class="navbar">
+                <h2>📝 Pre-test Numerasi</h2>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </header>
+
+            <div class="pretest-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar" style="width: 0%"></div>
+                </div>
+                <p class="progress-text"><span id="currentQuestion">1</span> dari <span id="totalQuestions">10</span></p>
+
+                <div class="question-box" id="questionBox">
+                    <!-- Questions akan di-load dari data -->
+                </div>
+
+                <div class="button-group">
+                    <button id="prevBtn" class="btn-secondary" onclick="previousQuestion()">← Sebelumnya</button>
+                    <button id="nextBtn" class="btn-primary" onclick="nextQuestion()">Selanjutnya →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEARNING PAGE -->
+    <div id="learningPage" class="hidden">
+        <div class="container">
+            <header class="navbar">
+                <h2>📚 Materi Pembelajaran</h2>
+                <div class="user-info">
+                    <span id="userGreeting"></span>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </header>
+
+            <div class="learning-container">
+                <div class="sidebar">
+                    <h3>📊 Profil Anda</h3>
+                    <div class="profile-card">
+                        <p><strong>Level:</strong> <span id="levelBadge" class="badge"></span></p>
+                        <p><strong>Skor Pre-test:</strong> <span id="scoreBadge"></span>%</p>
+                        <p><strong>Progress:</strong> <span id="progressBadge">0</span>%</p>
+                    </div>
+
+                    <h3>📖 Materi</h3>
+                    <div id="materialList" class="material-list">
+                        <!-- Materials akan di-load dari data -->
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div id="materialContent" class="material-content">
+                        <p class="placeholder">Pilih materi untuk memulai pembelajaran</p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-primary" id="practiceBtn" onclick="goToPractice()" style="display:none">Mulai Latihan →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRACTICE PAGE -->
+    <div id="practicePage" class="hidden">
+        <div class="container">
+            <header class="navbar">
+                <h2>✏️ Latihan Interaktif</h2>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </header>
+
+            <div class="practice-container">
+                <div class="progress-bar">
+                    <div class="progress" id="practiceProgressBar" style="width: 0%"></div>
+                </div>
+                <p class="progress-text"><span id="practiceCurrentQuestion">1</span> dari <span id="practiceTotalQuestions">5</span></p>
+
+                <div class="question-box" id="practiceQuestionBox">
+                    <h3 class="question-title">Pertanyaan akan dimuat...</h3>
+                </div>
+
+                <div id="feedbackBox" class="feedback-box" style="display:none"></div>
+
+                <div class="button-group">
+                    <button id="submitBtn" class="btn-primary" onclick="submitAnswer()">Jawab</button>
+                    <button id="nextPracticeBtn" class="btn-primary" onclick="nextPracticeQuestion()" style="display:none">Soal Berikutnya →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEACHER DASHBOARD PAGE -->
+    <div id="teacherDashboardPage" class="hidden">
+        <div class="container">
+            <header class="navbar">
+                <h2>📊 Dashboard Guru</h2>
+                <div class="user-info">
+                    <span id="teacherName"></span>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+                <div class="dashboard-grid">
+                    <div class="stats-card">
+                        <h3>👥 Total Siswa</h3>
+                        <p class="stat-number" id="totalStudents">0</p>
+                    </div>
+                    <div class="stats-card">
+                        <h3>✅ Selesai Pre-test</h3>
+                        <p class="stat-number" id="pretestDone">0</p>
+                    </div>
+                    <div class="stats-card">
+                        <h3>📈 Rata-rata Skor</h3>
+                        <p class="stat-number" id="avgScore">0%</p>
+                    </div>
+                    <div class="stats-card">
+                        <h3>🏃 Progres Pembelajaran</h3>
+                        <p class="stat-number" id="avgProgress">0%</p>
+                    </div>
+                </div>
+
+                <h3>📋 Daftar Siswa dan Perkembangan</h3>
+                <div class="filter-section">
+                    <input type="text" id="searchInput" placeholder="Cari nama siswa..." onkeyup="filterStudents()">
+                    <select id="levelFilter" onchange="filterStudents()">
+                        <option value="">Semua Level</option>
+                        <option value="dasar">Dasar</option>
+                        <option value="menengah">Menengah</option>
+                        <option value="mahir">Mahir</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table class="student-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Email</th>
+                                <th>Level</th>
+                                <th>Skor Pre-test</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <!-- Data siswa akan di-load dari data -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // DATA & CONFIG
+        // ========================================
+
+        // Sample Data
+        const PRETEST_QUESTIONS = [
+            {
+                id: 1,
+                question: 'Berapa hasil dari 2 + 3?',
+                options: ['5', '4', '6', '3'],
+                correct_answer: '5',
+                explanation: 'Penjumlahan sederhana: 2 + 3 = 5'
+            },
+            {
+                id: 2,
+                question: 'Berapa hasil dari 10 - 4?',
+                options: ['6', '5', '7', '8'],
+                correct_answer: '6',
+                explanation: 'Pengurangan: 10 - 4 = 6'
+            },
+            {
+                id: 3,
+                question: 'Berapa hasil dari 3 × 4?',
+                options: ['12', '11', '13', '10'],
+                correct_answer: '12',
+                explanation: 'Perkalian: 3 × 4 = 12'
+            },
+            {
+                id: 4,
+                question: 'Berapa hasil dari 20 ÷ 5?',
+                options: ['4', '5', '3', '6'],
+                correct_answer: '4',
+                explanation: 'Pembagian: 20 ÷ 5 = 4'
+            },
+            {
+                id: 5,
+                question: 'Berapa hasil dari 15 + 8?',
+                options: ['23', '22', '24', '20'],
+                correct_answer: '23',
+                explanation: 'Penjumlahan: 15 + 8 = 23'
+            },
+            {
+                id: 6,
+                question: 'Berapa hasil dari 50 - 15?',
+                options: ['35', '34', '36', '30'],
+                correct_answer: '35',
+                explanation: 'Pengurangan: 50 - 15 = 35'
+            },
+            {
+                id: 7,
+                question: 'Berapa hasil dari 6 × 7?',
+                options: ['42', '41', '43', '40'],
+                correct_answer: '42',
+                explanation: 'Perkalian: 6 × 7 = 42'
+            },
+            {
+                id: 8,
+                question: 'Berapa hasil dari 100 ÷ 10?',
+                options: ['10', '9', '11', '8'],
+                correct_answer: '10',
+                explanation: 'Pembagian: 100 ÷ 10 = 10'
+            },
+            {
+                id: 9,
+                question: 'Berapa hasil dari 25 + 30?',
+                options: ['55', '54', '56', '50'],
+                correct_answer: '55',
+                explanation: 'Penjumlahan: 25 + 30 = 55'
+            },
+            {
+                id: 10,
+                question: 'Berapa hasil dari 99 - 45?',
+                options: ['54', '53', '55', '50'],
+                correct_answer: '54',
+                explanation: 'Pengurangan: 99 - 45 = 54'
+            }
+        ];
+
+        const MATERIALS = [
+            {
+                id: 1,
+                title: 'Penjumlahan Dasar',
+                description: 'Belajar konsep penjumlahan dasar',
+                level: 'dasar'
+            },
+            {
+                id: 2,
+                title: 'Pengurangan Dasar',
+                description: 'Belajar konsep pengurangan dasar',
+                level: 'dasar'
+            },
+            {
+                id: 3,
+                title: 'Perkalian Dasar',
+                description: 'Belajar konsep perkalian dasar',
+                level: 'dasar'
+            },
+            {
+                id: 4,
+                title: 'Penjumlahan Bersusun',
+                description: 'Penjumlahan dengan bilangan lebih besar',
+                level: 'menengah'
+            },
+            {
+                id: 5,
+                title: 'Pembagian Dasar',
+                description: 'Belajar konsep pembagian dasar',
+                level: 'menengah'
+            },
+            {
+                id: 6,
+                title: 'Operasi Desimal',
+                description: 'Operasi dengan bilangan desimal',
+                level: 'mahir'
+            }
+        ];
+
+        const PRACTICE_QUESTIONS = {
+            1: {
+                dasar: [
+                    { id: 1, question: 'Berapa 1 + 1?', options: ['2', '1', '3', '0'], correct_answer: '2', explanation: 'Penjumlahan paling dasar' },
+                    { id: 2, question: 'Berapa 5 + 5?', options: ['10', '9', '11', '8'], correct_answer: '10', explanation: 'Lima tambah lima sama dengan sepuluh' },
+                    { id: 3, question: 'Berapa 3 + 2?', options: ['5', '4', '6', '3'], correct_answer: '5', explanation: 'Tiga tambah dua sama dengan lima' },
+                    { id: 4, question: 'Berapa 7 + 3?', options: ['10', '9', '11', '8'], correct_answer: '10', explanation: 'Tujuh tambah tiga sama dengan sepuluh' },
+                    { id: 5, question: 'Berapa 4 + 6?', options: ['10', '9', '11', '8'], correct_answer: '10', explanation: 'Empat tambah enam sama dengan sepuluh' }
+                ],
+                menengah: [
+                    { id: 6, question: 'Berapa 25 + 18?', options: ['43', '42', '44', '40'], correct_answer: '43', explanation: 'Dua puluh lima tambah delapan belas' },
+                    { id: 7, question: 'Berapa 34 + 27?', options: ['61', '60', '62', '59'], correct_answer: '61', explanation: 'Tiga puluh empat tambah dua puluh tujuh' },
+                    { id: 8, question: 'Berapa 45 + 36?', options: ['81', '80', '82', '79'], correct_answer: '81', explanation: 'Empat puluh lima tambah tiga puluh enam' },
+                    { id: 9, question: 'Berapa 52 + 48?', options: ['100', '99', '101', '98'], correct_answer: '100', explanation: 'Lima puluh dua tambah empat puluh delapan' },
+                    { id: 10, question: 'Berapa 63 + 37?', options: ['100', '99', '101', '98'], correct_answer: '100', explanation: 'Enam puluh tiga tambah tiga puluh tujuh' }
+                ],
+                mahir: [
+                    { id: 11, question: 'Berapa 125 + 238?', options: ['363', '362', '364', '360'], correct_answer: '363', explanation: 'Seratus dua puluh lima tambah dua ratus tiga puluh delapan' },
+                    { id: 12, question: 'Berapa 456 + 289?', options: ['745', '744', '746', '740'], correct_answer: '745', explanation: 'Empat ratus lima puluh enam tambah dua ratus delapan puluh sembilan' },
+                    { id: 13, question: 'Berapa 789 + 456?', options: ['1245', '1244', '1246', '1240'], correct_answer: '1245', explanation: 'Tujuh ratus delapan puluh sembilan tambah empat ratus lima puluh enam' },
+                    { id: 14, question: 'Berapa 1000 + 500?', options: ['1500', '1499', '1501', '1495'], correct_answer: '1500', explanation: 'Seribu tambah lima ratus' },
+                    { id: 15, question: 'Berapa 2345 + 1678?', options: ['4023', '4022', '4024', '4020'], correct_answer: '4023', explanation: 'Dua ribu tiga ratus empat puluh lima tambah seribu enam ratus tujuh puluh delapan' }
+                ]
+            }
+        };
+
+        const SAMPLE_STUDENTS = [
+            { id: 1, name: 'Ahmad Rifaldi', email: 'ahmad@example.com', level: 'dasar', score: 45, progress: 20, status: 'learning' },
+            { id: 2, name: 'Siti Nurhaliza', email: 'siti@example.com', level: 'menengah', score: 68, progress: 50, status: 'learning' },
+            { id: 3, name: 'Budi Santoso', email: 'budi@example.com', level: 'mahir', score: 85, progress: 80, status: 'learning' },
+            { id: 4, name: 'Rina Wijaya', email: 'rina@example.com', level: 'dasar', score: 55, progress: 30, status: 'learning' }
+        ];
+
+        // ========================================
+        // STATE MANAGEMENT
+        // ========================================
+        let currentUser = null;
+        let currentPage = 'login';
+        let currentQuestionIndex = 0;
+        let pretestAnswers = {};
+        let practiceAnswers = {};
+        let currentMaterialId = null;
+        let practiceQuestions = [];
+        let studentLevel = 'dasar';
+        let studentScore = 0;
+        let allStudents = [];
+
+        // ========================================
+        // PAGE MANAGEMENT
+        // ========================================
+        function showPage(pageName) {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('pretestPage').classList.add('hidden');
+            document.getElementById('learningPage').classList.add('hidden');
+            document.getElementById('practicePage').classList.add('hidden');
+            document.getElementById('teacherDashboardPage').classList.add('hidden');
+
+            switch(pageName) {
+                case 'login':
+                    document.getElementById('loginPage').classList.remove('hidden');
+                    break;
+                case 'pretest':
+                    document.getElementById('pretestPage').classList.remove('hidden');
+                    loadPretestQuestions();
+                    break;
+                case 'learning':
+                    document.getElementById('learningPage').classList.remove('hidden');
+                    initLearning();
+                    break;
+                case 'practice':
+                    document.getElementById('practicePage').classList.remove('hidden');
+                    loadPracticeQuestions();
+                    break;
+                case 'teacher':
+                    document.getElementById('teacherDashboardPage').classList.remove('hidden');
+                    initTeacherDashboard();
+                    break;
+            }
+            currentPage = pageName;
+        }
+
+        // ========================================
+        // AUTHENTICATION
+        // ========================================
+        function demoLogin(role) {
+            const email = role === 'student' ? 'student@example.com' : 'teacher@example.com';
+            const password = role === 'student' ? 'student123' : 'teacher123';
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            document.getElementById('role').value = role;
+        }
+
+        function login(event) {
+            if (event) event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            if (!email || !password || !role) {
+                alert('Semua field harus diisi');
+                return;
+            }
+
+            // Validate credentials (in real app, this would call an API)
+            let isValid = false;
+            if (role === 'student' && email === 'student@example.com' && password === 'student123') {
+                isValid = true;
+            } else if (role === 'teacher' && email === 'teacher@example.com' && password === 'teacher123') {
+                isValid = true;
+            }
+
+            if (!isValid) {
+                alert('Email atau password salah!');
+                return;
+            }
+
+            // Save user data
+            currentUser = {
+                id: Math.random(),
+                name: role === 'student' ? 'Siswa Demo' : 'Guru Demo',
+                email: email,
+                role: role
+            };
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            // Navigate to appropriate page
+            if (role === 'student') {
+                showPage('pretest');
+            } else {
+                showPage('teacher');
+            }
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                document.getElementById('loginForm').reset();
+                showPage('login');
+            }
+        }
+
+        // ========================================
+        // PRETEST FUNCTIONS
+        // ========================================
+        function loadPretestQuestions() {
+            document.getElementById('totalQuestions').textContent = PRETEST_QUESTIONS.length;
+            displayPretestQuestion(0);
+        }
+
+        function displayPretestQuestion(index) {
+            if (index < 0 || index >= PRETEST_QUESTIONS.length) return;
+
+            currentQuestionIndex = index;
+            const question = PRETEST_QUESTIONS[index];
+            const questionBox = document.getElementById('questionBox');
+
+            let html = `
+                <h3 class="question-title">Pertanyaan ${index + 1}</h3>
+                <p class="question-text">${escapeHtml(question.question)}</p>
+                <div class="options">
+            `;
+
+            question.options.forEach((option) => {
+                const checked = pretestAnswers[index] === option ? 'checked' : '';
+                html += `
+                    <label class="option-label">
+                        <input type="radio" name="pretest-answer" value="${option}" ${checked} onchange="savePretestAnswer(${index}, '${option}')">
+                        <span class="option-text">${escapeHtml(option)}</span>
+                    </label>
+                `;
+            });
+
+            html += `</div>`;
+            questionBox.innerHTML = html;
+
+            // Update progress
+            document.getElementById('currentQuestion').textContent = index + 1;
+            document.getElementById('progressBar').style.width = ((index + 1) / PRETEST_QUESTIONS.length * 100) + '%';
+
+            // Update buttons
+            document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'inline-block';
+            document.getElementById('nextBtn').textContent = index === PRETEST_QUESTIONS.length - 1 ? 'Selesai' : 'Selanjutnya →';
+        }
+
+        function savePretestAnswer(index, answer) {
+            pretestAnswers[index] = answer;
+        }
+
+        function previousQuestion() {
+            displayPretestQuestion(currentQuestionIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex === PRETEST_QUESTIONS.length - 1) {
+                submitPretest();
+            } else {
+                displayPretestQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function submitPretest() {
+            // Calculate score
+            let correctCount = 0;
+            PRETEST_QUESTIONS.forEach((q, i) => {
+                if (pretestAnswers[i] === q.correct_answer) {
+                    correctCount++;
+                }
+            });
+
+            const score = Math.round((correctCount / PRETEST_QUESTIONS.length) * 100);
+            const level = determineLevel(score);
+
+            // Save to localStorage
+            const userData = JSON.parse(localStorage.getItem('currentUser'));
+            userData.pretestScore = score;
+            userData.level = level;
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            currentUser = userData;
+            studentLevel = level;
+            studentScore = score;
+
+            alert(`Selesai!\nLevel Anda: ${getLevelText(level)}\nSkor: ${score}`);
+            showPage('learning');
+        }
+
+        function determineLevel(score) {
+            if (score < 50) return 'dasar';
+            if (score < 75) return 'menengah';
+            return 'mahir';
+        }
+
+        // ========================================
+        // LEARNING FUNCTIONS
+        // ========================================
+        function initLearning() {
+            const userData = JSON.parse(localStorage.getItem('currentUser'));
+            if (!userData) return;
+
+            studentLevel = userData.level || 'dasar';
+            studentScore = userData.pretestScore || 0;
+            currentUser = userData;
+
+            document.getElementById('userGreeting').textContent = `Halo, ${userData.name}`;
+            document.getElementById('levelBadge').innerHTML = getLevelText(studentLevel);
+            document.getElementById('scoreBadge').textContent = studentScore;
+            document.getElementById('progressBadge').textContent = '0';
+
+            loadMaterials();
+        }
+
+        function loadMaterials() {
+            const filteredMaterials = MATERIALS.filter(m => m.level === studentLevel);
+            let html = '';
+
+            filteredMaterials.forEach(material => {
+                html += `
+                    <div class="material-item" onclick="selectMaterial(${material.id}, '${material.title}')">
+                        <div class="material-header">
+                            <h4>${escapeHtml(material.title)}</h4>
+                            <span class="material-badge">${material.level}</span>
+                        </div>
+                        <p>${escapeHtml(material.description)}</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById('materialList').innerHTML = html;
+        }
+
+        function selectMaterial(materialId, title) {
+            currentMaterialId = materialId;
+            const content = getMaterialContent(materialId, studentLevel);
+            document.getElementById('materialContent').innerHTML = `
+                <h2>${escapeHtml(title)}</h2>
+                ${content}
+            `;
+            document.getElementById('practiceBtn').style.display = 'inline-block';
+        }
+
+        function getMaterialContent(materialId, level) {
+            const contents = {
+                1: {
+                    dasar: `
+                        <div class="material-section">
+                            <h3>Penjumlahan Dasar</h3>
+                            <p>Penjumlahan adalah operasi menggabungkan dua bilangan atau lebih.</p>
+                            <div class="example-box">
+                                <h4>Contoh:</h4>
+                                <p>2 + 3 = 5</p>
+                                <p>Ini berarti jika kita punya 2 apel dan menambah 3 apel, maka total menjadi 5 apel.</p>
+                            </div>
+                            <div class="exercise-box">
+                                <h4>Mari Latihan:</h4>
+                                <p>Coba hitung: 1 + 4 = ?</p>
+                            </div>
+                        </div>
+                    `,
+                    menengah: `
+                        <div class="material-section">
+                            <h3>Penjumlahan Bersusun</h3>
+                            <p>Penjumlahan bersusun digunakan untuk bilangan yang lebih besar.</p>
+                            <div class="example-box">
+                                <h4>Contoh:</h4>
+                                <pre>  23
++ 15
+----
+  38</pre>
+                            </div>
+                        </div>
+                    `,
+                    mahir: `
+                        <div class="material-section">
+                            <h3>Penjumlahan Tingkat Lanjut</h3>
+                            <p>Operasi pada bilangan besar dan desimal.</p>
+                            <div class="example-box">
+                                <h4>Contoh:</h4>
+                                <p>1234 + 5678 = 6912</p>
+                            </div>
+                        </div>
+                    `
+                },
+                2: {
+                    dasar: `<div class="material-section"><h3>Pengurangan Dasar</h3><p>Pengurangan adalah operasi mengurangi bilangan.</p></div>`,
+                    menengah: `<div class="material-section"><h3>Pengurangan Bersusun</h3><p>Pengurangan dengan bilangan lebih besar.</p></div>`,
+                    mahir: `<div class="material-section"><h3>Pengurangan Kompleks</h3><p>Pengurangan dengan desimal dan pecahan.</p></div>`
+                },
+                3: {
+                    dasar: `<div class="material-section"><h3>Perkalian Dasar</h3><p>Perkalian adalah penambahan berulang.</p></div>`,
+                    menengah: `<div class="material-section"><h3>Perkalian Bersusun</h3><p>Perkalian dengan bilangan berlapis.</p></div>`,
+                    mahir: `<div class="material-section"><h3>Perkalian Kompleks</h3><p>Perkalian dengan berbagai tipe bilangan.</p></div>`
+                },
+                4: `<div class="material-section"><h3>Penjumlahan Bersusun</h3><p>Materi untuk level menengah.</p></div>`,
+                5: `<div class="material-section"><h3>Pembagian Dasar</h3><p>Pembagian adalah pembatasan bilangan.</p></div>`,
+                6: `<div class="material-section"><h3>Operasi Desimal</h3><p>Operasi dengan bilangan desimal untuk level mahir.</p></div>`
+            };
+
+            if (typeof contents[materialId] === 'object') {
+                return contents[materialId][level] || '<p>Materi tidak tersedia</p>';
+            }
+            return contents[materialId] || '<p>Materi tidak tersedia</p>';
+        }
+
+        function goToPractice() {
+            if (!currentMaterialId) {
+                alert('Pilih materi terlebih dahulu');
+                return;
+            }
+            showPage('practice');
+        }
+
+        // ========================================
+        // PRACTICE FUNCTIONS
+        // ========================================
+        function loadPracticeQuestions() {
+            if (!currentMaterialId || !PRACTICE_QUESTIONS[currentMaterialId]) {
+                practiceQuestions = [];
+            } else {
+                practiceQuestions = PRACTICE_QUESTIONS[currentMaterialId][studentLevel] || [];
+            }
+
+            if (practiceQuestions.length === 0) {
+                practiceQuestions = [
+                    { id: 1, question: 'Contoh soal 1', options: ['A', 'B', 'C', 'D'], correct_answer: 'A', explanation: 'Penjelasan' },
+                    { id: 2, question: 'Contoh soal 2', options: ['A', 'B', 'C', 'D'], correct_answer: 'B', explanation: 'Penjelasan' },
+                    { id: 3, question: 'Contoh soal 3', options: ['A', 'B', 'C', 'D'], correct_answer: 'C', explanation: 'Penjelasan' },
+                    { id: 4, question: 'Contoh soal 4', options: ['A', 'B', 'C', 'D'], correct_answer: 'D', explanation: 'Penjelasan' },
+                    { id: 5, question: 'Contoh soal 5', options: ['A', 'B', 'C', 'D'], correct_answer: 'A', explanation: 'Penjelasan' }
+                ];
+            }
+
+            document.getElementById('practiceTotalQuestions').textContent = practiceQuestions.length;
+            displayPracticeQuestion(0);
+        }
+
+        function displayPracticeQuestion(index) {
+            if (index < 0 || index >= practiceQuestions.length) return;
+
+            currentQuestionIndex = index;
+            const question = practiceQuestions[index];
+            const questionBox = document.getElementById('practiceQuestionBox');
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.style.display = 'none';
+
+            let html = `
+                <h3 class="question-title">Soal ${index + 1}</h3>
+                <p class="question-text">${escapeHtml(question.question)}</p>
+                <div class="options">
+            `;
+
+            question.options.forEach((option) => {
+                html += `
+                    <label class="option-label">
+                        <input type="radio" name="practice-answer" value="${option}">
+                        <span class="option-text">${escapeHtml(option)}</span>
+                    </label>
+                `;
+            });
+
+            html += `</div>`;
+            questionBox.innerHTML = html;
+
+            document.getElementById('practiceCurrentQuestion').textContent = index + 1;
+            document.getElementById('practiceProgressBar').style.width = ((index + 1) / practiceQuestions.length * 100) + '%';
+
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('nextPracticeBtn').style.display = 'none';
+        }
+
+        function submitAnswer() {
+            const selected = document.querySelector('input[name="practice-answer"]:checked');
+            if (!selected) {
+                alert('Pilih jawaban terlebih dahulu');
+                return;
+            }
+
+            const answer = selected.value;
+            const question = practiceQuestions[currentQuestionIndex];
+            const isCorrect = answer === question.correct_answer;
+
+            practiceAnswers[currentQuestionIndex] = answer;
+
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.innerHTML = `
+                <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                    <p>${isCorrect ? '✅ Jawaban Benar!' : '❌ Jawaban Salah'}</p>
+                    <p class="explanation">${escapeHtml(question.explanation)}</p>
+                </div>
+            `;
+            feedbackBox.style.display = 'block';
+
+            document.getElementById('submitBtn').style.display = 'none';
+            if (currentQuestionIndex === practiceQuestions.length - 1) {
+                document.getElementById('nextPracticeBtn').textContent = 'Selesai';
+                document.getElementById('nextPracticeBtn').onclick = finishPractice;
+            }
+            document.getElementById('nextPracticeBtn').style.display = 'block';
+        }
+
+        function nextPracticeQuestion() {
+            displayPracticeQuestion(currentQuestionIndex + 1);
+        }
+
+        function finishPractice() {
+            const correctCount = Object.entries(practiceAnswers).filter(([index, answer]) => {
+                return answer === practiceQuestions[index].correct_answer;
+            }).length;
+
+            const score = Math.round((correctCount / practiceQuestions.length) * 100);
+            alert(`Selesai!\nJawaban Benar: ${correctCount} dari ${practiceQuestions.length}\nSkor: ${score}%`);
+            showPage('learning');
+        }
+
+        // ========================================
+        // TEACHER DASHBOARD FUNCTIONS
+        // ========================================
+        function initTeacherDashboard() {
+            const userData = JSON.parse(localStorage.getItem('currentUser'));
+            if (!userData) return;
+
+            document.getElementById('teacherName').textContent = `Halo, ${userData.name}`;
+            document.getElementById('totalStudents').textContent = SAMPLE_STUDENTS.length;
+            document.getElementById('pretestDone').textContent = SAMPLE_STUDENTS.length;
+            document.getElementById('avgScore').textContent = '63%';
+            document.getElementById('avgProgress').textContent = '45%';
+
+            allStudents = JSON.parse(JSON.stringify(SAMPLE_STUDENTS));
+            displayStudents(allStudents);
+        }
+
+        function displayStudents(students) {
+            let html = '';
+            students.forEach((student, index) => {
+                const statusBadge = getStatusBadge(student.status);
+                const levelBadge = getLevelBadge(student.level);
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${escapeHtml(student.name)}</td>
+                        <td>${escapeHtml(student.email)}</td>
+                        <td>${levelBadge}</td>
+                        <td>${student.score}%</td>
+                        <td>
+                            <div class="progress-mini">
+                                <div class="progress-mini-bar" style="width: ${student.progress}%"></div>
+                            </div>
+                            ${student.progress}%
+                        </td>
+                        <td>${statusBadge}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('studentTableBody').innerHTML = html;
+        }
+
+        function filterStudents() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const level = document.getElementById('levelFilter').value;
+
+            const filtered = allStudents.filter(student => {
+                const matchName = student.name.toLowerCase().includes(search);
+                const matchLevel = level === '' || student.level === level;
+                return matchName && matchLevel;
+            });
+
+            displayStudents(filtered);
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                'belum_pretest': '<span class="badge badge-warning">⏳ Belum Pre-test</span>',
+                'learning': '<span class="badge badge-info">📚 Belajar</span>',
+                'completed': '<span class="badge badge-success">✅ Selesai</span>'
+            };
+            return badges[status] || status;
+        }
+
+        function getLevelBadge(level) {
+            const badges = {
+                'dasar': '<span class="badge badge-primary">🟢 Dasar</span>',
+                'menengah': '<span class="badge badge-warning">🟡 Menengah</span>',
+                'mahir': '<span class="badge badge-danger">🔴 Mahir</span>'
+            };
+            return badges[level] || level;
+        }
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function getLevelText(level) {
+            const levels = {
+                'dasar': '🟢 Dasar',
+                'menengah': '🟡 Menengah',
+                'mahir': '🔴 Mahir'
+            };
+            return levels[level] || level;
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                if (currentUser.role === 'student') {
+                    showPage('learning');
+                } else {
+                    showPage('teacher');
+                }
+            } else {
+                showPage('login');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', login);
+    </script>
+</body>
+</html>
