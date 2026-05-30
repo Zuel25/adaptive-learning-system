@@ -75,4 +75,3 @@ adaptive-learning-system/
 
 ---
 
-Dibuat dengan ❤️ untuk pendidikan yang lebih baik
