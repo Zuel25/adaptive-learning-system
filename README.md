@@ -61,12 +61,10 @@ adaptive-learning-system/
 ## 🔐 Login Default
 
 **Siswa:**
-- Email: student@example.com
-- Password: student123
+- Email: tajulaziz110@gmail.com
 
 **Guru:**
-- Email: teacher@example.com
-- Password: teacher123
+- Email: tajulgimang@gmail.com
 
 ## 📝 Teknologi
 
