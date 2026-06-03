@@ -67,7 +67,7 @@ const userProgressSchema = new mongoose.Schema(
     },
     totalStudyTime: {
       type: Number,
-      default: 0 // dalam menit
+      default: 0
     },
     badges: {
       type: [String],
@@ -87,12 +87,10 @@ const userProgressSchema = new mongoose.Schema(
   }
 );
 
-// Index untuk performa query
 userProgressSchema.index({ userId: 1 });
 userProgressSchema.index({ level: 1 });
 userProgressSchema.index({ progress: -1 });
 
-// Method untuk update progress percentage
 userProgressSchema.methods.calculateProgress = function() {
   const completedCount = this.materialsCompleted.length;
   const total = this.totalMaterialsToStudy;
@@ -100,7 +98,6 @@ userProgressSchema.methods.calculateProgress = function() {
   return this.progress;
 };
 
-// Method untuk update average practice score
 userProgressSchema.methods.calculateAverageScore = function() {
   if (this.practiceScores.length === 0) {
     this.averagePracticeScore = 0;
@@ -111,7 +108,6 @@ userProgressSchema.methods.calculateAverageScore = function() {
   return this.averagePracticeScore;
 };
 
-// Method untuk update level berdasarkan pretest score
 userProgressSchema.methods.updateLevel = function() {
   if (this.pretestScore < 50) {
     this.level = 'Dasar';
@@ -123,7 +119,6 @@ userProgressSchema.methods.updateLevel = function() {
   return this.level;
 };
 
-// Auto calculate progress sebelum save
 userProgressSchema.pre('save', function(next) {
   this.calculateProgress();
   this.calculateAverageScore();
